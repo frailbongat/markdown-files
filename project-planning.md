@@ -1,6 +1,6 @@
 ## Project Planning
 
-### Requirements:
+#### Requirements:
 * Objective & Scope
 * Purpose
 * Target Audience
@@ -8,21 +8,21 @@
 * Budget
 * Deployment
 
-### Create a Timeline
+#### Create a Timeline
 
 * Carefully establish a timeline
 * Document your timeline/task
 * For clients, always tell them longer than you think
 
 
-### Wireframing & Mockups
+#### Wireframing & Mockups
 
 * Know what final result will look like
 * Create wireframe of mockups
 * What components will go where?
 * Send for approval
 
-### Start Coding
+#### Start Coding
 
 * Use everything as guide
 * Setup dev environment
@@ -30,13 +30,13 @@
 * Setup GIT repo with branches
 * Everyone has their own workflow
 
-### Communicate
+#### Communicate
 
 * Keep in touch
 * Make sure you are on the same page
 * Get feedback
 
-### Testing
+#### Testing
 
 * Be thorough with your testing
 * Test on multiple platforms
