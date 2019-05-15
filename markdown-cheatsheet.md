@@ -1,112 +1,118 @@
-<!-- Headings -->
-
-# Heading 1
-
-## Heading 2
-
+# Markdown Cheatsheet
+## Headings
 ### Heading 3
-
 #### Heading 4
-
 ##### Heading 5
+###### heading 6
 
+```markdown
+# Markdown Cheatsheet
+## Headings
+### Heading 3
+#### Heading 4
+##### Heading 5
 ###### Heading 6
+```
 
+---
+## Italic
+*This text is italic*
 
-<!-- Italics -->
+_This text is italic_
 
-*This text* is italic
+```markdown
+*This text is italic*
+_This text is italic_
+```
 
-_This text_ is italic
+---
+## Strong
+**This text is strong**
 
+__This text is strong__
 
-<!-- Italics -->
+```markdown
+**This text is strong**
+__This text is strong__
+```
 
-**This text** is italic
+---
+## Strikethrough
+~~This text is strikethrough~~
 
-__This text__ is italic
+```markdown
+~~This text is strikethrough~~
+```
 
-
-<!-- Strikethrough -->
-
-~~This text~~ is strikethrough
-
-
-<!-- Horizontal Rule -->
-
+---
+## Horizontal Rule
 ---
 ___
 
+```markdown
+---
+___
+```
 
-<!-- Blockquote -->
-
+---
+## Blockquote
 > This is a quote
 
+```markdown
+> This is a quote
+```
 
-<!-- Links -->
-
+---
+## Links
 [Facebook](https://www.facebook.com)
 
-[Facebook](https://www.facebook.com "Go to facebook")
+[Facebook](https:/www.facebook.com "Go to facebook")
 
+```markdown
+[Facebook](https://www.facebook.com)
+[Facebook](https:/www.facebook.com "Go to facebook")
+```
 
-<!-- Unordered List -->
-
+---
+## Unordered List
 * Item 1
 * Item 2
 * Item 3
     * Nested Item 1
     * Nested Item 2
 
+```markdown
+* Item 1
+* Item 2
+* Item 3
+    * Nested Item 1
+    * Nested Item 2
+```
 
-<!-- Ordered List -->
-
+---
+## Ordered List
 1. Item 1
 1. Item 2
 1. Item 3
 
+```markdown
+1. Item 1
+1. Item 2
+1. Item 3
+```
 
-<!-- Inline Code Block -->
+---
+## Inline Code Block
+`<p>This is a text</p>`
 
-`<p>This is a paragraph</p>`
+```markdown
+`<p>This is a text</p>`
+```
 
-
-<!-- Images -->
-
+---
+## Images
 ![Markdown Logo](https://markdown-here.com/img/icon256.png)
 
-
-<!-- Github Markdown -->
-
-<!-- Code Blocks -->
-
-```bash
-    npm install
-
-    npm start
+```markdown
+![Markdown Logo](https://markdown-here.com/img/icon256.png)
 ```
-
-```javascript
-    function add(num1, num2) {
-       return num1 + num2;
-    }
-```
-
-```python
-    def add(num1, num2):
-        return num1 + num2
-```
-
-<!-- Tables -->
-
-| Name        | Email             |
-| ----------- | ----------------- |
-| John Doe    | johndoe@gmail.com |
-| Marry Grace | grace@gmail.com   |
-
-
-<!-- Task Lists -->
-
-* [x] Task 1
-* [x] Task 2
-* [] Task 3
