@@ -131,121 +131,34 @@ public function services() {
 
 ### Assets
 
-
+**To Link**
+```blade
+href="{{ asset('css/app.css') }}"
 ```
-LARAVEL FRAMEWORK
 
-ENVIRONMENT SETUP
+**Compile CSS**
+```
+1. Npm install - required for compiling
+2. Change the resources folder css
+3. Npm run dev - compile assets
+4. Npm run watch - watch assets for changes and compile automatically
+```
 
-Install
-1. XAMPP
-2. Composer
-3. VSCODE
-
-Create Project
-composer create-project laravel/laravel lsapp
-
-Create Virtual Host
-1. Add virtual host entry in httpd-vhosts.conf
-    1. /Applications/XAMPP/xamppfiles/etc/extra/httpd-vhosts.conf
-    2. <VirtualHost *:80>
-    			ServerName lsapp.local
-    			DocumentRoot "/Applications/XAMPP/xamppfiles/htdocs/lsapp/public"
-		</VirtualHost>
-2. Add virtual host to hosts file
-    1. /private/etc/hosts
-    2. 127.0.0.1 lsapp.local
-3. Restart Apache
-
-
-
-PROCESS
-
-Create View
-1. In resources/views, create a pages folder
-2. Inside pages, create index.blade.php 
-
-Create Controller
-1. php artisan make:controller PagesController
-
-In  PagesController
-1. Create function or method
-public function index(){
-	return view(‘pages.index’);
-}
-
-Create Route
-1. Route::get(‘/’, ‘PagesController@index’);
-
-
-
-BLADE TEMPLATING
-
-Layouts
-1. Create layouts folder in view
-2. Create app.blade.php
-3. Put any repeating elements
-4. @yield(‘content’)
-5. @extends(‘layouts.app’)
-	@section(‘content’)
-	@endsection
-
-Includes
-1. Create includes folder in view
-2. Create navbar.blade.php
-3. In app.blade.php
-	@include(‘include.navbar’)
-
-PASS PARAMETER TO BLADE TEMPLATE
-1. In Controller
-	public function index() {
-		$title = ‘Welcome To Laravel’;
-		return view(‘pages.index’, compact(‘title’));	
-	}
-1. In view
-	<h1>{{ $title }}</h1>
-
-2. In Controller
-	public function index() {
-		$title = ‘Welcome To Laravel’;
-		return view(‘pages.index’)->with(‘title’, $title);	
-	}
-2. In view
-	<h1>{{ $title }}</h1>
-3. Multiple values, In Controller
-	public function services() {
-		$data = [
-			‘title’ => ‘Services’,
-			‘services’ => ‘Web Design’
-		];
-		return view(‘pages.services’)->with($data);
-	}	
-3. In view
-	<h1>{{ $title }}</h1>
-	<p>{{ $services }}</p>
-
-ASSETS
-
-To link
-	 href=“{{ asset(‘css/app.css’) }}”
-
-Compile css
-1. npm install — required for compiling
-2. Always change under resources folder
-	public folder is just the compiled version
-3. npm run dev — compile assets
-4. npm run watch — watch assets for changes and compile automatically
-
-Custom css
+**Custom CSS**
+```
 1. In resources/sass
 2. Create _custom.scss
 3. In app.scss
-4. Add @import ‘custom’;
+4. Add @import 'custom';
+```
 
-If you don’t wanna use sass
+**If you don't wanna use sass**
+```
 1. Go to public/css
 2. Change app.css content
+```
 
+```
 DATABASE
 
 1. Create a database in phpmyadmin
