@@ -158,101 +158,141 @@ href="{{ asset('css/app.css') }}"
 2. Change app.css content
 ```
 
+### Database
+
+**Create a database in phpmyadmin**
+
+**For Post**
 ```
-DATABASE
-
-1. Create a database in phpmyadmin
-
-For Post
 1. Make a controller
-	php artisan make:controller PostsController
-	php artisan make:controller PostsController  --resource
-	- -resource — insert basic function for crud (create, read, update, delete)
+--resource -> insert basic function for crud
+```
+```php
+php artisan make:controller PostsController --resource
+```
+```
 2. Make a model
-	php artisan make:model Post -m
-	-m is to create migration for that model
-Tables
-3. Add tables for you post in migration file
-4. Before running migration, insert database information in .env file
-5. Make migration
-	php artisan migrate
-Data
-Use tinker for data manipulation - insert, select , etc
-1. To use tinker - lets you interact with the database using eloquent ORM
-	php artisan tinker
-2. To access the model use — App\model_name
-	App\Post::count() — we can call function like count()
-3. To get out
-	quit
+-m -> create migration for the model
+```
+```php
+php artisan make:model Post -m
+```
+
+**Tables**
+```
+1. Add tables for post in migration file
+2. Before running migration, insert database information in .env file
+3. Make migration
+```
+```php
+php artisan migrate
+```
+
+**Data**
+```
+Use tinker for data manipulation - insert, select, etc.
+Tinker lets you interact with the databse using eloquent ORM
+1. To use tinker
+2. To access the model use App\{model_name}
+3. To quit
+```
+```php
+1. php artisan tinker
+2. App\Post::count()
+3. quit
+```
+```
 To create new data
 1. Create an instance which is being held in a memory
-	$post = new App\Post()
 2. Add data to a column
-	$post->title = ‘Post One’;
-	$post->body = ’This is the post body’;
-3. To save it to the database
-	$post->save();
+3. Save it to the database
+```
+```php
+1. $post = new App\Post()
+2. $post->title = 'Post One';
+2. $post->body = 'This is the first post body';
+3. $post->save();
+```
 
-Routes
+**Routes**
+```
 1. Show routes
- 	php artisan route:list
-2. create all the routes for resource instead of doing it 1 by 1
-	Route::resource(‘posts’, ‘PostsController’);
+2. Create all the routes for resource
+```
+```php
+1. php artisan route:list
+2. Route::resource('posts', 'PostsController');
+```
 
+### Models
 
-
-MODELS
-
-Default (just for reference)
-In post model
+**In post model**
+```php
 // Table Name
-protected $table = ‘posts’;
+protected $table = 'posts';
 // Primary Key
-public $primaryKey = ‘id’;
+public $primaryKey = 'id';
 // Timestamps
 public $timestamps = true;
+```
 
-Create a post page
-1. Create a view in resources/views/posts
-2. Call view in postcontroller
+**Create a post page**
+```
+1. In resources/views/posts, create a view
+2. Call the view in controller
+```
 
-Fetch Post (in postcontroller)
+**Fetch Post (In PostsController)**
+```
 1. Bring in post model
-	use App\Post;
-	App — is the namespace of the model
-	Post — is the title or class of the model
 2. Call the eloquent function for fetching data inside index()
-	Post::all();
+```
+```php
+1. use App\Post;
+2. Post::all();
 
-Post::all();		show all the post	
-Post::find($id); 	show each post
-Post::orderBy(‘title’, ‘desc’)->get();	Order all post
-	title(firstparameter) — means order by title
-	secondparameter — desc or asc
-	->get() — is required when create a clause like this
+/**
+ * Additional Info:
+ * Post::all();							show all the post
+ * Post::find($id); 					show each post
+ * Post::orderBy(‘title’, asc)->get();	Order all post
+ */
+```
 
-Pagination
-1. Instead of ->get()
-2. Use ->pagination(10)
-	10 — is the number of how many item in each page
-	$posts = Post::orderBy(’created_at’, ‘desc’)->paginate(10)
-3. In view, add {{ $posts->links() }}
+**Pagination**
+```php
+// 1. Use ->pagination(10)
+$posts = Post::orderBy('created_at', 'desc')->paginate(10);
+// 2. In view
+{{ $posts->links() }}
+```
 
+### Forms & Saving Data
 
-FORMS & SAVING DATA
-1. Always create the view first — in resources/views/posts — create.blade.php
-2. Then call it in the controller — return view(‘posts.create’);
-3. Put it to navbar if necessary
+**Setup Page**
+```
+1. In resources/views/posts, create create.blade.php
+2. Call it in controller
+```
 
-Use Laravel Collective
-Setup
-Install — composer require laravelcollective/html
-Add providers — Collective\Html\HtmlServiceProvider::class,
-Add alias — 'Form' => Collective\Html\FormFacade::class,
-       			 'Html' => Collective\Html\HtmlFacade::class,
-Opening and closing a form
+**Use Laravel Collective**
+```php
+// 1. Install
+composer require laravelcollective/html
+// 2. Add providers
+Collective\Html\HtmlServiceProvider::class,
+// 3. Add alias
+'Form' => Collective\Html\FormFacade::class,
+'Html' => Collective\Html\HtmlFacade::class,
+```
+
+**Opening And Closing Form**
+```php
 {!! Form::open(['action' => 'PostsController@store', 'method' => 'POST']) !!}
 {!! Form::close() !!}
+```
+
+```
 Some examples
 {{ Form::label('title', 'Title') }}
 {{ Form::text('title', '', ['class' => 'form-control', 'placeholder' => 'Title']) }}
