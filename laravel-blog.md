@@ -292,258 +292,293 @@ Collective\Html\HtmlServiceProvider::class,
 {!! Form::close() !!}
 ```
 
-```
-Some examples
+**Examples / Reference**
+```php
 {{ Form::label('title', 'Title') }}
 {{ Form::text('title', '', ['class' => 'form-control', 'placeholder' => 'Title']) }}
 {{ Form::textarea('body', '', ['class' => 'form-control', 'placeholder' => 'Post Body']) }}
 {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
-Sample form group
+// Sample form group
 <div class="form-group">
 	{{ Form::label('title', 'Title') }}
 	{{ Form::text('title', '', ['class' => 'form-control', 'placeholder' => 'Title']) }}	
 </div>
+```
 
-Create a validation when submitting the form
-1. inside store function
-	$this->validate($request, [
-            'title' => 'required',
-            'body' => 'required'
-        ]);
-Add messaging or alerts
-1. In views/includes — create messages.blade.php
-	@if(count($errors) > 0)
-		@foreach($errors->all() as $error)
-			<div class="alert alert-danger">
-				{{ $error }}
-			</div>
-		@endforeach
-	@endif
+**Create a validation when submitting the form**
+```php
+// Inside store function
+$this->validation($request, [
+	'title' => 'required',
+	'body' => 'required'
+])
+```
 
-	@if(session('success'))
-		<div class="alert alert-success">
-			{{ session('success') }}
-		</div>
-	@endif
-
-	@if(session('error'))
+**Add messaging or alert**
+```blade
+<!-- 1. In views/includes create messages.blade.php -->
+@if(count($errors) > 0)
+	@foreach($errors->all() as $error)
 		<div class="alert alert-danger">
-			{{ session(‘error’) }}
+			{{ $error }}
 		</div>
-	@endif
-2. Add to  main layout file
-Save the data using tinker commands
+	@endforeach
+@endif
+
+@if(session('success'))
+	<div class="alert alert-success">
+		{{ session('success') }}
+	</div>
+@endif
+
+@if(session('error'))
+	<div class="alert alert-danger">
+		{{ session(‘error’) }}
+	</div>
+@endif
+<!-- 2. Call the file to main layout -->
+```
+
+**Save data using tinker commands**
+```php
 $post = new Post;
 $post->title = $request->input(‘title’);
 $post->body = $request->input(‘body’);
 $post->save();
-Redirect with a message
+// Redirect with a message
 return redirect(‘/posts’)->with(‘success’, ‘Post Created’);
+```
 
-Implement form editor
-Use laravel-ckeditor
-1. Follow installation
-2. Follow usage — add it to layout
-3. Add the id to the form — body
-4. Update show so that it can parse html — {!! $post->body !!}
+**Implement form editor**
+```php
+// 1. Follow installation
+// 2. Follow usage - add it to layout
+// 3. Add the id to the form - body
+// 4. Update show so that it can parse html
+{!! $post->body !!}
+```
 
+### Edit Post
+```php
+// 1. Create an edit button that will go to 
+/posts/{{ $post->id }}/edit
+// 2. Create an edit view similar to create
+// change: title — action and add id — values of title & body — Spoof a PUT request
+{{ Form::hidden(‘_method’, ‘PUT’) }}
+// 3. Add codes to edit function — hint: find the post & load up edit view 
+// 4. Add codes to update function — similar to store — change new and use find — change the message
+```
 
-EDIT POST
-1. Create an edit button that will go to /posts/{{ $post->id }}/edit — link
-2. Create an edit view similar to create
-	change: title — action and add id — values of title & body — Spoof a PUT request
-	{{Form::hidden(‘_method’, ‘PUT’)}} 
-
-3. Add codes to edit function — hint: find the post & load up edit view 
-4. Add codes to update function — similar to store — change new and use find — change the message
-
-DELETE POST
+### Delete Post
+```
 1. Create a post request using form
 2. Spoof a DELETE request
 3. Create a submit button for delete
 4. In destroy function
-5. Find the post
-6. Delete a post
-7. Redirect to list of posts
+	Find the post
+	Delete a post
+	Redirect to list of posts
+```
 
-USER AUTHENTICATION
-1. Enable user authentication — php aritsan make:auth
-2. When you create auth, it creates a layout — hence it will replace your old layout
-	Copy your layout file
-	and let it artisan replace your layout
-3. For navbar
-	Cut it and paste it to your include navbar
-	Get what’s needed from your old navbar
-		old links
-		the design
-4. For layout view
-	include navbar
-	put content to container
-	add messages
-	add ckeditor
-5. Change home to dashboard (optional)
-	Controller — return view — rename file
-	LoginController — RegisterController — ResetPasswordController
-	routes — delete name — rename view
-	Link it to navbar
-6. Add create post button to dashboard or home view
-Add user_id to post table to connect it to the user who create the post
-1. php artisan make:migration add_user_id_to_posts — create a migration file
-2. In up function
-	Schema::table(‘posts’, function($table){
-		$table->integer(‘user_id’)
-	});
-3. In down function
-	Schema::table(‘posts’, function($table){
-		$table->dropColumn(‘user_id’)
-	});
-4. php artisan migrate — to create table
-5. In posts table add a user id value to old posts
-6. In PostsController add user_id when storing
-	before save()
-	$post->user_id = auth()->user()->id;
+### User Authentication
 
-MODEL RELATIONSHIP (BLOG POST AND USER)
-1. In post model — tell a post that it i belongs to a user
-	public function user(){
-		return $this->belongsTo(‘App\User’);
-	}
-2. In user model — tell a user it can have many posts
-	public function posts(){
-		return $this->hasMany(‘App\Post’);
-	}
-3. In dashboard controller — fetch the post for that specific user
-	use App\User; — bring in user model
-	in index function —  add
-	$user_id = auth()->user()->id;
-	$user = User::find($user_id);
-	return view(‘dashboard’)->with(‘posts’, $user->posts);
-4. In dashboard view — render the posts for that specific user
-	@if(count($posts) > 0)
-		<table  class=“table table-striped”>
+**Enable auth**
+```php
+// 1. Enable user authentication
+// When creating an auth, it creates a layout - hence, it will replace your old layout
+// Copy your layout file
+// And let artisan replace your layout
+php artisan make:auth
+// 2. For navbar
+// Cut it and paste it to your include navbar
+// Get what's needed from your old navbar
+// - old links
+// - the design
+// 3. For layout view
+// include navbar
+// put content to container
+// add messages
+// add ckeditor
+// 4. Change home to dashboard (optional)
+// Controller — return view — rename file
+// LoginController — RegisterController — ResetPasswordController
+// routes — delete name — rename view
+// Link it to navbar
+// 5. Add create post button to dashboard or home view
+```
+
+**Add user_id to post table to connect it to the user who create the post**
+```php
+// 1. create a migration file
+php artisan make:migration add_user_id_to_posts
+// 2. In up function
+Schema::table('posts', function($table){
+	$table->integer('user_id')
+});
+// 3. In down function
+Schema::table('posts', function($table){
+	$table->dropColumn('user_id')
+});
+// 4. Create table
+php artisan migrate
+// 5. In posts table add a user id value to old posts
+// 6. In PostsController add user_id when storing
+// before save()
+$post->user_id = auth()->user()->id;
+```
+
+### Model Relationship (Blog & User)
+```php
+// 1. In post model — tell a post that it i belongs to a user
+public function user(){
+	return $this->hasMany('App\Post');
+}
+// 2. In user model — tell a user it can have many posts
+public function posts(){
+	return $this->hasMany('App\Post');
+}
+// 3. In dashboard controller — fetch the post for that specific user
+// use App\User; — bring in user model
+// in index function —  add
+$user_id = auth()->user()->id;
+$user = User::find($user_id);
+return view(‘dashboard’)->with('posts', $user->posts);
+// 4. In dashboard view — render the posts for that specific user
+@if(count($posts) > 0)
+	<table  class=“table table-striped”>
+		<tr>
+			<th>Title</th>
+			<th></th>
+			<th></th>
+		</tr>
+		@foreach($posts as post)
 			<tr>
-				<th>Title</th>
-				<th></th>
-				<th></th>
-			</tr>
-			@foreach($posts as post)
-				<tr>
-					<td>{{ $post->title }}</td>
-					<td> 
-						//the edit button
-					</td>
-					<td> // the delete button </td>
-				</tr>	
-			@endforeach
-		</table>
-	@else
-		<p>You have no posts</p>
-	@endif
-5. Add user name who write the post all posts and single post (optional)
-	{{ $post->user->name }}
+				<td>{{ $post->title }}</td>
+				<td> 
+					//the edit button
+				</td>
+				<td> 
+					// the delete button 
+				</td>
+			</tr>	
+		@endforeach
+	</table>
+@else
+	<p>You have no posts</p>
+@endif
+// 5. Add user name who write the post all posts and single post (optional)
+{{ $post->user->name }}
+```
 
-ACCESS CONTROL
-1. Only registered user can create post
-	User middleware from DashboardController — it blocks guest
-	Copy to post controller
-2. Let guest user access the list of blog and single blog
-	Add parameter to middleware
-	[‘except’ => [‘index’, ‘show’]]
-3. Hide edit and delete in single blog for guest user
-	In show view
-	@if(!Auth::guest())
-	@endif
-4. Let only the blog post creator can edit and delete his post
-	In show view — inside !auth-guest condition
-	@if(Auth::user()->id == $post->user_id)
-	@endif
-5. Only creator of the post can edit the post even if they manually input the url
-	In post controller — under edit function
-	after the $post
-	// Check for correct user
-	if(auth()->user()->id != $post->user_id) {
-		return redirect(‘/posts’)->with(‘error’, ‘Unauthorized Page’);
-	}
-	Do the same thing for delete — destroy function
+### Access Control
+```php
+// 1. Only registered user can create post
+// Use middleware from DashboardController — it blocks guest
+// Copy to post controller
+// 2. Let guest user access the list of blog and single blog
+// Add parameter to middleware
+[‘except’ => [‘index’, ‘show’]]
+// 3. Hide edit and delete in single blog for guest user
+// In show view
+@if(!Auth::guest())
+@endif
+// 4. Let only the blog post creator can edit and delete his post
+// In show view — inside !auth-guest condition
+@if(Auth::user()->id == $post->user_id)
+@endif
+// 5. Only creator of the post can edit the post even if they manually input the url
+// In post controller — under edit function
+// after the $post
+// Check for correct user
+if(auth()->user()->id != $post->user_id) {
+	return redirect(‘/posts’)->with(‘error’, ‘Unauthorized Page’);
+}
+// 6. Do the same thing for delete — destroy function
+```
 
-ADD FILE UPLOADING
-1. In create view (this is just the UI)
-	right above the submit
-	<div class=“form-group”>
-		{{Form::file(‘cover_image’)}}
+### Add File Uploading
+```php
+// 1. In create view (this is just the UI)
+// right above the submit
+<div class=“form-group”>
+	{{Form::file(‘cover_image’)}}
+</div>
+// General rule when submitting an image:
+// In the form — add an enctype attribute
+'enctype' => 'multipart/form-data'
+// 2. Add another column to posts table
+// Create migration
+php artisan make:migration add_cover_image_to_posts
+// In the migration file — add similar schema from the user id
+// In up — Change integer to string set name to 'cover_image'
+// In down — add similar schema, change string to dropColumn
+// Run migration
+php artisan migrate
+// Check database - delete all previous post (optional)
+// 3. Handle the actual upload
+// In post controller — in store — in validation
+// Add validation for the image
+'cover_image' => 'image|nullable|max:1999'
+// image means it must be an image
+// nullable means it is optional
+// max:1999 means it must be under 2 megabytes
+// After validation
+// Handle file upload
+if($request->hasFile('cover_image')) {
+	// Get Filename with the extension
+	$filenameWithExt = $request->file('cover_image')->getClientOriginalName();
+	// Get just filename
+	$filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+	// Get just extension
+	$extension = $request->file('cover_image')->getClientOriginalExtension();
+	// Filename to store
+	$fileNameToStore = $filename.'_'.time().'.'.$extension;
+	// Upload Image
+	$path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+} else {
+	$fileNameToStore = 'noimage.jpg';
+}
+// To save it to the database — In create post
+$post->cover_image = $fileNameToStore;
+// Make public/cover_images accessable to public — create symlink
+php artisan storage:link
+// Create a post and check database if it’s working correctly
+// Check public storage and storage folder
+// 4. Display it in posts
+// In index view
+<div class="row">
+	<div class="col-md-4 col-sm-4">
+		<img style="width: 100%;" src="/storage/cover_images/{{ $post -> cover_image }}">
 	</div>
-	General rule when submitting an image:
-	In the form — add an enctype attribute
-	‘enctype’ => ‘multipart/form-data’
-2. Add another column to posts table
-	php artisan make:migration add_cover_image_to_posts — Create migration
-	In the migration file — add similar schema from the user id
-	In up — Change integer to string set name to ‘cover_image’
-	In down — add similar schema, change string to dropColumn
-	php artisan migrate — Run migration
-	Check database — delete all previous post (optional)	
-3. Handle the actual upload
-	In post controller — in store — in validation
-	Add validation for the image
-	‘cover_image’ => ‘image|nullable|max:1999’
-	image means it must be an image
-	nullable means it is optional
-	max:1999 means it must be under 2 megabytes
-	After validation
-	// Handle File Upload
-	if($request->hasFile(‘cover_image’)) {
-		// Get Filename with the extension
-		$filenameWithExt = $request->file(‘cover_image’)->getClientOriginalName();
-		// Get just filename
-		$filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-		// Get just extension
-		$extension = $request->file(‘cover_image’)->getClientOriginalExtension();
-		// Filename to store
-		$fileNameToStore = $filename.’_’.time().’.’.$extension;
-		// Upload Image
-		$path = $request->file(‘cover_image’)->storeAs(‘public/cover_images’, $fileNameToStore)
-	} else {
-		$fileNameToStore = ‘noimage.jpg’
-	}
-	To save it to the database — In create post
+	<div class="col-md-8 col-sm-8">
+		// put title and written by here
+	</div>
+</div>
+// In show view - under h1
+<img style="width: 100%;" src="/storage/cover_images/{{ $post -> cover_image }}">
+// 5. For edit
+// from create view copy file field and enctype to edit view
+// Handle update function:
+// Copy everything in the store for file upload
+// remove else statement
+// In edit post before save()
+if($request->hasFile('cover_image')){
 	$post->cover_image = $fileNameToStore;
-	Make public/cover_images accessable to public — create symlink
-	php artisan storage:link
-	Create a post and check database if it’s working correctly
-	Check public storage and storage folder
-4. Display it in posts
-	In index view
-	<div class=“row>
-		<div class=“col-md-4 col-sm-4”>
-			<img style=“width: 100%;” src=“/storage/cover_images/{{ $post -> cover_image }}”>
-		</div>
-		<div class=“col-md-8 col-sm-8”>
-			// put title and written by here
-		</div>
-	</div>
-	In show view — under h1
-	<img style=“width: 100%;” src=“/storage/cover_images/{{ $post -> cover_image }}”>
-5. For edit
-	from create view copy file field and enctype to edit view
-	Handle update function:
-	Copy everything in the store for file upload
-	remove else statement
-	In edit post before save()
-	if($request->hasFile(‘cover_image’)){
-		$post->cover_image = $fileNameToStore;
-	}
-6. When deleting a post the image must also be deleted
-	In post controller — in destroy — before delete()
-	if($post->cover_image != ‘noimage.jpg’){
-		// Delete Image
-		Storage::delete(“public/cover_images/$post->cover_image”);
-	}
-	use Illuminate\Support\Facades\Storage; — bring in storage library
-	
-EXTRAS
-1. Tell if navlink is active
-	{{ (request()->is('/')) ? 'active' : '' }}
-	{{ (request()->is('about')) ? 'active' : '' }}
-	
+}
+// 6. When deleting a post the image must also be deleted
+// In post controller — in destroy — before delete()
+if($post->cover_image != 'noimage.jpg'){
+	// Delete Image
+	Storage::delete("public/cover_images/$post->cover_image");
+}
+// bring in storage library
+use Illuminate\Support\Facades\Storage;
+```
 
+### Extras
+
+**Tell if navlink is active**
+```blade
+{{ (request()->is('/')) ? 'active' : '' }}
+{{ (request()->is('about')) ? 'active' : '' }}
 ```
